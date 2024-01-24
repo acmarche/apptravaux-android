@@ -238,7 +238,7 @@ class AvaloirDetailScreen(
                         modifier = Modifier.fillMaxSize(),
                         cameraPositionState = cameraPositionState
                     ) {
-                        Marker(state)
+                        Marker(state = state)
                         //Marker(position = singapore)
                     }
                     isMapLoaded = true

@@ -1,9 +1,9 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    //kotlin("kapt") version "1.9.22"
     id("com.google.devtools.ksp")
-    id("dagger.hilt.android.plugin")
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
 }
@@ -84,15 +84,16 @@ dependencies {
     /**
      * Using hilt for DI
      */
+    // implementation("com.google.dagger:hilt-android:2.50")
+    // kapt("com.google.dagger:hilt-compiler:2.50")
+    //kapt("androidx.hilt:hilt-compiler:2.50")// Hilt compiler
+    //ksp("com.google.dagger:hilt-android-compiler:2.50")
+    //ksp("com.google.dagger:dagger-compiler:2.50") // Dagger compiler
+
     implementation("com.google.dagger:hilt-android:2.50")
-    //kapt("com.google.dagger:hilt-android-compiler:2.50")
     ksp("com.google.dagger:dagger-compiler:2.50") // Dagger compiler
     ksp("com.google.dagger:hilt-compiler:2.50")   // Hilt compiler
-    //ksp("androidx.hilt:hilt-compiler:1.1.0")
-    // Allow references to generated code
-    //kapt {
-    //     correctErrorTypes = true
-    // }
+
 
     /**
      * My networking stuff cause Retrofit is da best.
@@ -167,4 +168,8 @@ dependencies {
 
     //FlowLayout
     implementation("com.google.accompanist:accompanist-flowlayout:0.32.0")
+}
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }
