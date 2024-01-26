@@ -21,6 +21,7 @@ class PermissionUtil(val context: Context) {
                     Manifest.permission.CAMERA,
                     Manifest.permission.FOREGROUND_SERVICE,
                     Manifest.permission.NEARBY_WIFI_DEVICES,
+                    Manifest.permission.POST_NOTIFICATIONS
                 )
             } else {
                 listOf(
@@ -46,9 +47,11 @@ class PermissionUtil(val context: Context) {
                     revokedPermissionsSize > 1 && i == revokedPermissionsSize - 2 -> {
                         textToShow.append(", et ")
                     }
+
                     i == revokedPermissionsSize - 1 -> {
                         textToShow.append(" ")
                     }
+
                     else -> {
                         textToShow.append(", ")
                     }

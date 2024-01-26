@@ -1,5 +1,6 @@
 package be.marche.apptravaux.screens
 
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import be.marche.apptravaux.BuildConfig
+//import be.marche.apptravaux.BuildConfig
 import be.marche.apptravaux.R
 import be.marche.apptravaux.entities.ErrorLog
 import be.marche.apptravaux.navigation.TravauxRoutes
@@ -61,8 +62,8 @@ class SettingScreen(val navController: NavController) {
             }
         ) { contentPadding ->
             Box(modifier = Modifier.padding(contentPadding)) {
-                val versionCode: Int = BuildConfig.VERSION_CODE
-                val versionName: String = BuildConfig.VERSION_NAME
+                val versionCode: Int =  Build.VERSION.SDK_INT
+                val versionName: String = Build.VERSION.RELEASE_OR_CODENAME
                 val version: String = java.lang.String.format(
                     stringResource(R.string.app_version),
                     versionCode,

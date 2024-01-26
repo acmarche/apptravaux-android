@@ -60,7 +60,6 @@ fun PermissionsScreen(onPermissionsOk: () -> Unit, onPermissionsKo: () -> Unit) 
     }
 }
 
-
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun RequestPermissionUi(
