@@ -2,7 +2,14 @@ package be.marche.apptravaux.screens.widgets
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,14 +39,14 @@ import be.marche.apptravaux.utils.DownloadHelper
 import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.io.File
-import java.util.*
 
 class AvaloirWidget {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Composable
     fun LoadAvaloirs(
         avaloirs: List<Avaloir>,
-        searchState: MutableState<TextFieldValue>?,
+        streetNameState: MutableState<TextFieldValue>?,
+        numberIdState: MutableState<TextFieldValue>?,
         navController: NavController
     ) {
         val context = LocalContext.current
@@ -48,38 +55,24 @@ class AvaloirWidget {
         val downloadHelper = DownloadHelper(context)
 
         LazyColumn {
-            val filteredAvaloirs: List<Avaloir>
-            val searchedText = searchState?.value?.text
+            val streetSearchedText = streetNameState?.value?.text
+            val numberSearchedId = numberIdState?.value?.text
 
-            filteredAvaloirs = when {
-                searchedText == null -> avaloirs
-                searchedText.isEmpty() -> avaloirs
-                else -> {
-                    val resultList = ArrayList<Avaloir>()
-                    for (avaloir in avaloirs) {
-                        if (filterAvaloir(avaloir, searchedText)) {
-                            resultList.add(avaloir)
-                        }
-                    }
-                    resultList
-                }
+            val filteredList = avaloirs.filter { avaloir ->
+                (numberSearchedId == null || numberSearchedId.isEmpty() || (numberSearchedId.toIntOrNull()
+                    ?: -1) == avaloir.idReferent) &&
+                        (streetSearchedText == null || streetSearchedText.isEmpty() || avaloir.rue?.contains(
+                            streetSearchedText,
+                            ignoreCase = true
+                        ) ?: false)
             }
-            items(filteredAvaloirs) { avaloir ->
+
+            items(filteredList) { avaloir ->
                 ItemAvaloir(avaloir, isConnected, downloadHelper) {
                     navController.navigate(TravauxRoutes.AvaloirDetailScreen.route + "/${avaloir.idReferent}")
                 }
             }
         }
-    }
-
-    private fun filterAvaloir(avaloir: Avaloir, searchText: String): Boolean {
-        if (searchText.isEmpty())
-            return true
-        if (avaloir.rue == null)
-            return true
-
-        return avaloir.rue.lowercase(Locale.getDefault())
-            .contains(searchText.lowercase(Locale.getDefault()))
     }
 
     @Composable
@@ -129,6 +122,13 @@ class AvaloirWidget {
                     )
                     Text(
                         text = "Ajouté le ${formatDateTime(avaloir.createdAt)}",
+                        style = ScreenSizeTheme.textStyle.fontStyle_1,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(modifier = Modifier.padding(5.dp))
+                    Text(
+                        text = "Numéro ${avaloir.idReferent}",
                         style = ScreenSizeTheme.textStyle.fontStyle_1,
                         fontWeight = FontWeight.Bold
                     )
