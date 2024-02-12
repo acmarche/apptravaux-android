@@ -31,7 +31,4 @@ class TravauxApplication : Application(), Configuration.Provider {
             .setMinimumLoggingLevel(android.util.Log.INFO)
             .setWorkerFactory(workerFactory)
             .build()
-     init {
-        //Thread.setDefaultUncaughtExceptionHandler(Thread.UncaughtExceptionHandler())
-    }
 }
