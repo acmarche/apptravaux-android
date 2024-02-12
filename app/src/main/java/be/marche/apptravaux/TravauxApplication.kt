@@ -6,7 +6,6 @@ import androidx.work.Configuration
 import be.marche.apptravaux.database.AppDatabase
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
-
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -19,17 +18,20 @@ class TravauxApplication : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
-    override fun getWorkManagerConfiguration() =
-        Configuration.Builder()
-            .setMinimumLoggingLevel(android.util.Log.INFO)
-            .setWorkerFactory(workerFactory)
-            .build()
-
     override fun onCreate() {
         super.onCreate()
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        }
+         //if (BuildConfig.DEBUG) {
+              Timber.plant(Timber.DebugTree())
+         //}
+    }
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setMinimumLoggingLevel(android.util.Log.INFO)
+            .setWorkerFactory(workerFactory)
+            .build()
+     init {
+        //Thread.setDefaultUncaughtExceptionHandler(Thread.UncaughtExceptionHandler())
     }
 }

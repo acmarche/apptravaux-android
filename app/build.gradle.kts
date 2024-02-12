@@ -126,6 +126,8 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.5.0")
     val timberVersion = "5.0.1"
     implementation("com.jakewharton.timber:timber:$timberVersion")
+    implementation("androidx.tracing:tracing:1.2.0")
+    implementation("androidx.tracing:tracing-ktx:1.2.0")
 
     /**
      * Firebase
@@ -154,6 +156,8 @@ dependencies {
     implementation("androidx.work:work-runtime:$workVersion")
     implementation("androidx.work:work-runtime-ktx:$workVersion")
     implementation("androidx.hilt:hilt-work:1.1.0")
+    ksp("androidx.hilt:hilt-compiler:1.1.0")
+
     // optional - GCMNetworkManager support
     implementation("androidx.work:work-gcm:$workVersion")
     //app start up
