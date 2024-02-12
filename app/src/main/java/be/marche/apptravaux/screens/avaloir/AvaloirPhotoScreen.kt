@@ -50,7 +50,7 @@ class AvaloirPhotoScreen(
 
     @ExperimentalMaterialApi
     @Composable
-    fun TakePicureMain(
+    fun TakePictureMain(
         avaloirViewModel: AvaloirViewModel = viewModel()
     ) {
         LaunchedEffect(true) {
@@ -203,10 +203,6 @@ class AvaloirPhotoScreen(
                     Avaloir(
                         id = null,
                         idReferent = 0,
-                        cosLatitude = 0.0,
-                        cosLongitude = 0.0,
-                        sinLatitude = 0.0,
-                        sinLongitude = 0.0,
                         latitude = location.latitude,
                         longitude = location.longitude,
                         imageUrl = fileImage.path,

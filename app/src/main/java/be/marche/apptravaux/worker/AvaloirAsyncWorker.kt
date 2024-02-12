@@ -17,7 +17,6 @@ import be.marche.apptravaux.networking.AvaloirService
 import be.marche.apptravaux.repository.AvaloirRepository
 import be.marche.apptravaux.repository.ErrorRepository
 import be.marche.apptravaux.ui.entities.Coordinates
-import be.marche.apptravaux.utils.DownloadHelper
 import be.marche.apptravaux.utils.FileHelper
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
@@ -53,9 +52,6 @@ class AvaloirAsyncWorker @AssistedInject constructor(
         sleep(15)
         avaloirs = avaloirService.fetchAllAvaloirs()
         downloadContent()
-        sleep(15)
-        downloadImagesContent()
-
         outputData.putString(WORK_RESULT, "Synchronisation finie").build()
         return Result.success(outputData.build())
     }
@@ -70,6 +66,7 @@ class AvaloirAsyncWorker @AssistedInject constructor(
                     "Avaloirs error: ${result.message}"
                 )
             }
+
             is NotificationState.Success -> {}
         }
         result = downloadDates()
@@ -79,6 +76,7 @@ class AvaloirAsyncWorker @AssistedInject constructor(
                 "download dates",
                 "Dates error: ${result.message}"
             )
+
             is NotificationState.Success -> {}
         }
 
@@ -89,17 +87,7 @@ class AvaloirAsyncWorker @AssistedInject constructor(
                 "download Commentaires",
                 "Commentaires error: ${result.message}"
             )
-            is NotificationState.Success -> {}
-        }
-    }
 
-    private suspend fun downloadImagesContent() {
-        when (val result = downloadImages()) {
-            is NotificationState.Error -> showNotification(
-                "message_channel_downloadImages", 3,
-                "download Images",
-                "Images download error: ${result.message}"
-            )
             is NotificationState.Success -> {}
         }
     }
@@ -171,42 +159,6 @@ class AvaloirAsyncWorker @AssistedInject constructor(
             return NotificationState.Success("oki comments")
         } catch (e: Exception) {
             insertError("fetchAllCommentaires", e.message)
-            Firebase.crashlytics.recordException(e)
-            return NotificationState.Error("${e.message}")
-        }
-    }
-
-    private suspend fun downloadImages(): NotificationState {
-        val downloadHelper = DownloadHelper(
-            applicationContext,
-        )
-        try {
-            var errorResult = ""
-            for (avaloir in avaloirs) {
-                if (avaloir.imageUrl?.isEmpty() == true) {
-                    continue
-                }
-                if (avaloir.imageUrl == null) {
-                    continue
-                }
-                try {
-                    downloadHelper.downloadImage(
-                        avaloir.idReferent,
-                        avaloir.imageUrl!!
-                    )
-                } catch (e: Exception) {
-                    errorResult = "error image: ${e.message}"
-                    insertError(
-                        "downloadImage avaloir id ",
-                        "${avaloir.idReferent} :  ${e.message}"
-                    )
-                    Firebase.crashlytics.recordException(e)
-                    return NotificationState.Error(errorResult)
-                }
-            }
-            return NotificationState.Success("oki images")
-        } catch (e: Exception) {
-            insertError("images fetch", e.message)
             Firebase.crashlytics.recordException(e)
             return NotificationState.Error("${e.message}")
         }

@@ -17,11 +17,9 @@ import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -31,17 +29,11 @@ import androidx.navigation.NavController
 import be.marche.apptravaux.R
 import be.marche.apptravaux.entities.Avaloir
 import be.marche.apptravaux.navigation.TravauxRoutes
-import be.marche.apptravaux.networking.ConnectionState
-import be.marche.apptravaux.networking.connectivityState
 import be.marche.apptravaux.ui.theme.ScreenSizeTheme
 import be.marche.apptravaux.utils.DateUtils.Companion.formatDateTime
-import be.marche.apptravaux.utils.DownloadHelper
 import coil.compose.rememberAsyncImagePainter
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import java.io.File
 
 class AvaloirWidget {
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Composable
     fun LoadAvaloirs(
         avaloirs: List<Avaloir>,
@@ -49,10 +41,6 @@ class AvaloirWidget {
         numberIdState: MutableState<TextFieldValue>?,
         navController: NavController
     ) {
-        val context = LocalContext.current
-        val connection by connectivityState()
-        val isConnected = connection == ConnectionState.Available
-        val downloadHelper = DownloadHelper(context)
 
         LazyColumn {
             val streetSearchedText = streetNameState?.value?.text
@@ -68,7 +56,7 @@ class AvaloirWidget {
             }
 
             items(filteredList) { avaloir ->
-                ItemAvaloir(avaloir, isConnected, downloadHelper) {
+                ItemAvaloir(avaloir) {
                     navController.navigate(TravauxRoutes.AvaloirDetailScreen.route + "/${avaloir.idReferent}")
                 }
             }
@@ -78,12 +66,8 @@ class AvaloirWidget {
     @Composable
     fun ItemAvaloir(
         avaloir: Avaloir,
-        isConnected: Boolean,
-        downloadHelper: DownloadHelper,
         onItemCLick: (Int) -> Unit
     ) {
-        val imgPath = this.ImageAvaloirPath(avaloir, isConnected, downloadHelper)
-
         Card(
             modifier = Modifier
                 .clickable {
@@ -98,7 +82,7 @@ class AvaloirWidget {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 ImageAvaloir(
-                    imgPath,
+                    avaloir.imageUrl,
                     ScreenSizeTheme.dimens.width,
                     ScreenSizeTheme.dimens.height
                 )
@@ -137,31 +121,6 @@ class AvaloirWidget {
                 }
             }
         }
-    }
-
-    fun ImageAvaloirPath(
-        avaloir: Avaloir,
-        isConnected: Boolean,
-        downloadHelper: DownloadHelper
-    ): String? {
-
-        if (isConnected) {
-            if (avaloir.imageUrl !== null) {
-                return avaloir.imageUrl!!
-            }
-        }
-
-        if (avaloir.idReferent == 0) {
-            return avaloir.imageUrl
-        }
-
-        val imagePath = downloadHelper.imageFullPath(avaloir.idReferent)
-
-        if (File(imagePath).canRead()) {
-            return imagePath
-        }
-
-        return null
     }
 
     @Composable

@@ -157,7 +157,7 @@ class AvaloirSearchScreen(
         if (location.latitude > 0.0) {
             if (isConnected) {
                 LaunchedEffect(true) {
-                    avaloirViewModel.search(location.latitude, location.longitude, "25m")
+                    avaloirViewModel.search(location.latitude, location.longitude, 250)
                 }
             } else {
                 ErrorDialog("Not connect")

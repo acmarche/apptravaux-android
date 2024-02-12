@@ -155,7 +155,7 @@ class AvaloirViewModel @Inject constructor(
     private val _resultSearch = MutableStateFlow<SearchResponseUiState>(SearchResponseUiState.Empty)
     val resultSearch: StateFlow<SearchResponseUiState> = _resultSearch
 
-    fun search(latitude: Double, longitude: Double, distance: String) {
+    fun search(latitude: Double, longitude: Double, distance: Int) {
 
         _resultSearch.value = SearchResponseUiState.Loading
 

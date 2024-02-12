@@ -29,7 +29,7 @@ data class SearchRequest
     (
     val latitude: Double,
     val longitude: Double,
-    val distance: String
+    val distance: Int
 )
 
 data class Coordinates

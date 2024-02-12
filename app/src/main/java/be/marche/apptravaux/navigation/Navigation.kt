@@ -88,7 +88,7 @@ fun Navigation(
 
         composable(route = TravauxRoutes.AvaloirPhotoScreen.route) {
             val screen = AvaloirPhotoScreen(navController)
-            screen.TakePicureMain(avaloirViewModel)
+            screen.TakePictureMain(avaloirViewModel)
         }
 
         composable(route = TravauxRoutes.AvaloirSearchScreen.route) {

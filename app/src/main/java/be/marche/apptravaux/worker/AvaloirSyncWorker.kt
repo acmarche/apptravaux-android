@@ -3,7 +3,6 @@ package be.marche.apptravaux.worker
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.icu.text.SimpleDateFormat
 import android.os.SystemClock.sleep
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
@@ -15,7 +14,6 @@ import be.marche.apptravaux.entities.NotificationState
 import be.marche.apptravaux.networking.AvaloirService
 import be.marche.apptravaux.repository.AvaloirRepository
 import be.marche.apptravaux.ui.entities.Coordinates
-import be.marche.apptravaux.utils.DateUtils
 import be.marche.apptravaux.utils.FileHelper
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase

@@ -11,12 +11,6 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
-fun galleryDir(): File {
-    val fileName = "ss"
-    val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-    return File(storageDir, fileName)
-}
-
 class FileHelper {
 
     fun createRequestBody(file: File): RequestBody {

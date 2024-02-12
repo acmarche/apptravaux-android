@@ -148,7 +148,6 @@ fun OutlinedButtonJf(texte: String, isEnabled: Boolean, onItemCLick: () -> Unit)
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MyNumberField(number: String, onChange: (String) -> Unit) {
 

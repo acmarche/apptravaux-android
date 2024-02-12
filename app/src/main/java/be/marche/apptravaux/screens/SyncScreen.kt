@@ -1,14 +1,24 @@
 package be.marche.apptravaux.screens
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -31,7 +41,6 @@ import be.marche.apptravaux.screens.widgets.TopAppBarJf
 import be.marche.apptravaux.ui.theme.LARGEST_PADDING
 import be.marche.apptravaux.ui.theme.MEDIUM_PADDING
 import be.marche.apptravaux.ui.theme.ScreenSizeTheme
-import be.marche.apptravaux.utils.DownloadHelper
 import be.marche.apptravaux.viewModel.AvaloirViewModel
 import be.marche.apptravaux.viewModel.StockViewModel
 import be.marche.apptravaux.viewModel.WorkerViewModel
@@ -160,9 +169,6 @@ class SyncScreen(
         avaloirViewModel: AvaloirViewModel,
         stockViewModel: StockViewModel
     ) {
-        val context = LocalContext.current
-        val downloadHelper = DownloadHelper(context)
-
         LaunchedEffect(true) {
             avaloirViewModel.countAvaloirs()
             stockViewModel.countProduit()
@@ -183,12 +189,6 @@ class SyncScreen(
             avaloirViewModel._countDateNettoyage,
         )
 
-        val filesCount = downloadHelper.countFiles()
-        val statImages: String = java.lang.String.format(
-            stringResource(R.string.stat_images),
-            filesCount,
-        )
-
         val statProduits: String = java.lang.String.format(
             stringResource(R.string.stat_produits),
             stockViewModel._countProduit,
@@ -197,12 +197,6 @@ class SyncScreen(
         Spacer(modifier = Modifier.padding(5.dp))
         Text(
             text = statAvaloirs,
-            modifier = Modifier.padding(8.dp),
-            textAlign = TextAlign.Center,
-        )
-        Spacer(modifier = Modifier.padding(5.dp))
-        Text(
-            text = statImages,
             modifier = Modifier.padding(8.dp),
             textAlign = TextAlign.Center,
         )
@@ -242,18 +236,22 @@ class SyncScreen(
                                 textInput.value = taskResult
                             }
                         }
+
                         WorkInfo.State.FAILED -> {
                             val workStatus = workInfo.state
                             textInput.value = workStatus.toString()
                         }
+
                         WorkInfo.State.RUNNING -> {
                             val workStatus = workInfo.state
                             textInput.value = workStatus.toString()
                         }
+
                         WorkInfo.State.CANCELLED -> {
                             val workStatus = workInfo.state
                             textInput.value = workStatus.toString()
                         }
+
                         else -> {
                             val workStatus = workInfo.state
                             textInput.value = workStatus.toString()
@@ -280,14 +278,17 @@ class SyncScreen(
                                 textInput.value = taskResult
                             }
                         }
+
                         WorkInfo.State.FAILED -> {
                             val workStatus = workInfo.state
                             textInput.value = workStatus.toString()
                         }
+
                         WorkInfo.State.RUNNING -> {
                             val workStatus = workInfo.state
                             textInput.value = workStatus.toString()
                         }
+
                         else -> {
                             val workStatus = workInfo.state
                             textInput.value = workStatus.toString()
