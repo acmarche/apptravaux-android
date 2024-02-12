@@ -160,7 +160,7 @@ class AvaloirSearchScreen(
                     avaloirViewModel.search(location.latitude, location.longitude, "25m")
                 }
             } else {
-                avaloirViewModel.searchByGeoLocal(location.latitude, location.longitude, 25.00)
+                ErrorDialog("Not connect")
             }
             ResultSearch(avaloirViewModel)
         } else {
@@ -195,7 +195,7 @@ class AvaloirSearchScreen(
                     color = MaterialTheme.colors.background
                 )
                 val widget = AvaloirWidget()
-                widget.LoadAvaloirs(state.response.avaloirs, null, navController)
+                widget.LoadAvaloirs(state.response.avaloirs, null, null,navController)
             }
             else -> {
 
