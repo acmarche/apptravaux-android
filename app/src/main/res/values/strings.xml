@@ -42,4 +42,6 @@
     <string name="stat_dates_nettoyages">Dates nettoyages: %d</string>
     <string name="stat_images">Images d\'avaloirs: %d</string>
     <string name="stat_produits">Produits: %d</string>
+    <string name="search_geo_not_connect">Pour faire une recherche par géolocalisation vous devez disposer d\'internet</string>
+    <string name="refresh_geoloc">Cliquez sur rafraîchir ma géolocalisation pour lancer une recherche</string>
 </resources>

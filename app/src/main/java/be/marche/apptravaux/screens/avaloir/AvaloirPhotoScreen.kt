@@ -210,7 +210,7 @@ class AvaloirPhotoScreen(
                     )
                 avaloirViewModel.insertAvaloir(avaloir)
                 Toast.makeText(context, "Avaloir ajouté", Toast.LENGTH_SHORT).show()
-                navController.navigate(TravauxRoutes.AvaloirListScreen.route) {
+                navController.navigate(TravauxRoutes.AvaloirDraftsScreen.route) {
                     popUpTo(TravauxRoutes.AvaloirHomeScreen.route)
                 }
             },

@@ -12,7 +12,6 @@ import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 sealed class ConnectionState {
@@ -53,7 +52,6 @@ private fun getCurrentConnectivityState(connectivityManager: ConnectivityManager
     return if (connected) ConnectionState.Available else ConnectionState.Unavailable
 }
 
-@Suppress("FunctionName")
 fun NetworkCallback(callback: (ConnectionState) -> Unit): ConnectivityManager.NetworkCallback {
     return object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {

@@ -48,6 +48,7 @@ import be.marche.apptravaux.navigation.TravauxRoutes
 import be.marche.apptravaux.networking.ConnectionState
 import be.marche.apptravaux.networking.connectivityState
 import be.marche.apptravaux.screens.widgets.AvaloirWidget
+import be.marche.apptravaux.screens.widgets.ConnectivityStatusBox
 import be.marche.apptravaux.screens.widgets.TopAppBarJf
 import be.marche.apptravaux.ui.theme.MEDIUM_PADDING
 import be.marche.apptravaux.ui.theme.ScreenSizeTheme
@@ -58,11 +59,14 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class AvaloirDraftsScreen(
     val navController: NavController,
 ) {
-    @OptIn(ExperimentalAnimationApi::class)
+    @OptIn(ExperimentalAnimationApi::class, ExperimentalCoroutinesApi::class)
     @Composable
     fun ListScreen(
         avaloirViewModel: AvaloirViewModel = viewModel()
     ) {
+        val connection by connectivityState()
+        val isConnected = connection == ConnectionState.Available
+
         Scaffold(
             topBar = {
                 TopAppBarJf(
@@ -84,6 +88,7 @@ class AvaloirDraftsScreen(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+                    ConnectivityStatusBox(isConnected)
                     Text(
                         text = "${avaloirs.value.count()} avaloirs brouillons",
                         style = MaterialTheme.typography.h5
@@ -101,7 +106,8 @@ class AvaloirDraftsScreen(
                         color = MaterialTheme.colors.background
                     )
                     Button(
-                        onClick = { navController.navigate(TravauxRoutes.SyncScreen.route) }
+                        onClick = { navController.navigate(TravauxRoutes.SyncScreen.route) },
+                        enabled = isConnected
                     ) {
                         Text(text = "Synchroniser les données")
                     }

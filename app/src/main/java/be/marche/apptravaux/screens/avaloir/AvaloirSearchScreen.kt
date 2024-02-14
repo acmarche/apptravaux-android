@@ -18,9 +18,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import be.marche.apptravaux.R
 import be.marche.apptravaux.entities.SearchResponseUiState
 import be.marche.apptravaux.location.GeolocationServiceViewModel
 import be.marche.apptravaux.navigation.TravauxRoutes
@@ -154,18 +156,23 @@ class AvaloirSearchScreen(
         isConnected: Boolean,
         location: LatLng
     ) {
-        if (location.latitude > 0.0) {
-            if (isConnected) {
-                LaunchedEffect(true) {
-                    avaloirViewModel.search(location.latitude, location.longitude, 250)
-                }
-            } else {
-                ErrorDialog("Not connect")
-            }
-            ResultSearch(avaloirViewModel)
-        } else {
-            Text(text = "Cliquez sur rafraîchir ma géolocalisation pour lancer une recherche")
+        if (!isConnected) {
+            ConnectivityStatusBox(isConnected)
+            ErrorDialog(stringResource(R.string.search_geo_not_connect))
+            DescriptionCanAddText()
+            return
         }
+
+        if (location.latitude <= 0.0) {
+            Text(text = stringResource(R.string.refresh_geoloc))
+            return
+        }
+
+        LaunchedEffect(true) {
+            avaloirViewModel.search(location.latitude, location.longitude, 250)
+        }
+
+        ResultSearch(avaloirViewModel)
     }
 
     @Composable
@@ -182,9 +189,11 @@ class AvaloirSearchScreen(
                 Text(text = "Recherche en cours...")
                 CircularProgressIndicatorSample()
             }
+
             is SearchResponseUiState.Error -> {
                 ErrorDialog(state.message)
             }
+
             is SearchResponseUiState.Loaded -> {
                 Text(
                     text = "${state.response.avaloirs.count()} avaloir(s) trouvé(s) dans un rayon de 25m",
@@ -195,8 +204,9 @@ class AvaloirSearchScreen(
                     color = MaterialTheme.colors.background
                 )
                 val widget = AvaloirWidget()
-                widget.LoadAvaloirs(state.response.avaloirs, null, null,navController)
+                widget.LoadAvaloirs(state.response.avaloirs, null, null, navController)
             }
+
             else -> {
 
             }
@@ -215,6 +225,15 @@ class AvaloirSearchScreen(
     private fun DescriptionText() {
         Text(
             text = "Cliquez sur un avaloir trouvé ou ajouter un autre",
+            fontSize = ScreenSizeTheme.textStyle.fontWidth_1,
+            modifier = Modifier.padding(5.dp)
+        )
+    }
+
+    @Composable
+    private fun DescriptionCanAddText() {
+        Text(
+            text = "Vous pouvez malgré tout ajouter un avaloir sans avoir internet",
             fontSize = ScreenSizeTheme.textStyle.fontWidth_1,
             modifier = Modifier.padding(5.dp)
         )

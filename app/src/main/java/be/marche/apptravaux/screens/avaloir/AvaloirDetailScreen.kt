@@ -123,6 +123,7 @@ class AvaloirDetailScreen(
         val context = LocalContext.current
         val messageDate = stringResource(R.string.dateCleanNoPublished)
         val messageCommentaire = stringResource(R.string.commentaireNoPublished)
+            val isDraft: Boolean = avaloir.idReferent == 0
 
         LazyColumn(
             modifier = Modifier
@@ -147,14 +148,17 @@ class AvaloirDetailScreen(
                         25.dp
                     )
                     Column {
-                        val texteRue = avaloir.rue ?: "Non déterminé"
+                        var texteRue = avaloir.rue ?: "Rue non déterminée"
+                        if (isDraft) {
+                            texteRue = avaloir.rue ?: "Avoir en brouillon"
+                        }
                         Text(
                             text = texteRue,
                             fontWeight = FontWeight.Bold,
                             fontSize = ScreenSizeTheme.textStyle.fontWidth_1
                         )
                         Spacer(modifier = Modifier.padding(5.dp))
-                        val texteLocalite = avaloir.localite ?: "Non déterminé"
+                        val texteLocalite = avaloir.localite ?: "Localité non déterminée"
                         Text(
                             text = texteLocalite,
                             fontWeight = FontWeight.Bold,
@@ -185,8 +189,6 @@ class AvaloirDetailScreen(
                     color = MaterialTheme.colors.background
                 )
             }
-
-            val isDraft: Boolean = avaloir.idReferent == 0
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),

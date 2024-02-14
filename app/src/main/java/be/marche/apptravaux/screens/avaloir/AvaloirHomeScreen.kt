@@ -49,7 +49,6 @@ class AvaloirHomeScreen(val navController: NavController) {
             }
         ) { contentPadding ->
             Box(modifier = Modifier.padding(contentPadding)) {
-
                 Column(modifier = Modifier.padding(12.dp)) {
                     LazyColumn {
                         items(datas) { data ->

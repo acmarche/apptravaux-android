@@ -89,7 +89,10 @@ class AvaloirWidget {
                 Column(
                     modifier = Modifier.padding(10.dp)
                 ) {
-                    val texteRue = avaloir.rue ?: "non déterminé"
+                    var texteRue = avaloir.rue ?: "Rue non déterminée"
+                    if (avaloir.idReferent == 0) {
+                        texteRue = avaloir.rue ?: "Avoir en brouillon"
+                    }
                     Text(
                         text = texteRue,
                         style = ScreenSizeTheme.textStyle.fontStyle_1,
@@ -97,7 +100,7 @@ class AvaloirWidget {
                     )
 
                     Spacer(modifier = Modifier.padding(5.dp))
-                    val texteLocalite = avaloir.localite ?: "non déterminé"
+                    val texteLocalite = avaloir.localite ?: "Localité non déterminée"
 
                     Text(
                         text = texteLocalite,
@@ -116,7 +119,6 @@ class AvaloirWidget {
                         style = ScreenSizeTheme.textStyle.fontStyle_1,
                         fontWeight = FontWeight.Bold
                     )
-
                     Spacer(modifier = Modifier.padding(5.dp))
                 }
             }
