@@ -193,12 +193,6 @@ class AvaloirAsyncWorker @AssistedInject constructor(
             val res = response.execute()
             if (res is Response && res.isSuccessful) {
                 res.body()?.let { dataMessage ->
-                    val error = dataMessage.error
-                    if (error > 0) {
-                        results.add(NotificationState.Error(dataMessage.message))
-                        Firebase.crashlytics.log("error avaloir upload ${dataMessage.message}")
-                        return@forEach
-                    }
                     val avaloir = dataMessage.avaloir
                     if (avaloir.idReferent > 0) {
                         try {
@@ -207,6 +201,12 @@ class AvaloirAsyncWorker @AssistedInject constructor(
                             Firebase.crashlytics.recordException(e)
                             results.add(NotificationState.Error("${e.message}"))
                         }
+                    }
+                    val error = dataMessage.error
+                    if (error > 0) {
+                        results.add(NotificationState.Error(dataMessage.message))
+                        Firebase.crashlytics.log("error avaloir upload ${dataMessage.message}")
+                        return@forEach
                     }
                 }
             } else {
@@ -297,29 +297,37 @@ class AvaloirAsyncWorker @AssistedInject constructor(
     }
 
     private suspend fun deleteNotInApi(): NotificationState {
+        if (avaloirs.size < 3000) {
+            return NotificationState.Success("not enough avaloirs")
+        }
+
         val localAvaloirIds = avaloirRepository.getAllAvaloirsNotDraftsList().map { it.idReferent }
         val apiIAvaloirIds = avaloirs.map { it.idReferent }
 
         // delete local avaloirs not in api list
         val itemsToDelete = localAvaloirIds.filterNot { apiIAvaloirIds.contains(it) }
 
-        try {
-            var errorResult = ""
+        if (itemsToDelete.size > 0) {
             try {
-                avaloirRepository.deleteAvaloirsNotIn(itemsToDelete)
+                var errorResult = ""
+                try {
+                      avaloirRepository.deleteAvaloirsNotIn(itemsToDelete)
+                } catch (e: Exception) {
+                    errorResult = "error delete local avaloirs: ${e.message}"
+                    insertError("error delete local Avaloirs", e.message)
+                    Firebase.crashlytics.recordException(e)
+                    NotificationState.Error("${e.message}")
+                    return NotificationState.Error(errorResult)
+                }
+                return NotificationState.Success("oki avaloirs")
             } catch (e: Exception) {
-                errorResult = "error delete local avaloirs: ${e.message}"
                 insertError("error delete local Avaloirs", e.message)
                 Firebase.crashlytics.recordException(e)
-                NotificationState.Error("${e.message}")
-                return NotificationState.Error(errorResult)
+                return NotificationState.Error("${e.message}")
             }
-            return NotificationState.Success("oki avaloirs")
-        } catch (e: Exception) {
-            insertError("error delete local Avaloirs", e.message)
-            Firebase.crashlytics.recordException(e)
-            return NotificationState.Error("${e.message}")
         }
+
+        return NotificationState.Success("oki avaloirs")
 
     }
 
