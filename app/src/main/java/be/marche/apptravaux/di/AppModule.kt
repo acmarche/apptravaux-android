@@ -93,7 +93,7 @@ class AppModule {
     fun provideCoroutineDispatcher() = CoroutineDispatcherProvider()
 
     companion object {
-        const val NETWORK_REQUEST_TIMEOUT_SECONDS = 15L
+        const val NETWORK_REQUEST_TIMEOUT_SECONDS = 100L
         const val BASE_URL = "https://apptravaux.marche.be/"
     }
 
