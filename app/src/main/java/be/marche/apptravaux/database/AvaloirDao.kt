@@ -97,6 +97,6 @@ interface AvaloirDao {
     @Query("SELECT COUNT(idReferent) FROM dateNettoyage")
     fun countDatesNettoyages(): Int
 
-    @Query("DELETE FROM avaloir WHERE idReferent NOT IN (:ids)")
+    @Query("DELETE FROM avaloir WHERE idReferent IN (:ids)")
     fun deleteAvaloirsNotIn(ids: List<Int>)
 }

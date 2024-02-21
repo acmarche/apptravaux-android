@@ -309,9 +309,9 @@ class AvaloirAsyncWorker @AssistedInject constructor(
 
         if (itemsToDelete.size > 0) {
             try {
-                var errorResult = ""
+                val errorResult: String
                 try {
-                      avaloirRepository.deleteAvaloirsNotIn(itemsToDelete)
+                    avaloirRepository.deleteAvaloirsNotIn(itemsToDelete)
                 } catch (e: Exception) {
                     errorResult = "error delete local avaloirs: ${e.message}"
                     insertError("error delete local Avaloirs", e.message)
