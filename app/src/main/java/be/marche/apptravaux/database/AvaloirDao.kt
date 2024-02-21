@@ -22,6 +22,9 @@ interface AvaloirDao {
     @Query("SELECT * FROM avaloir ORDER BY createdAt DESC")
     fun getAll(): List<Avaloir>
 
+    @Query("SELECT * FROM avaloir WHERE idReferent > 0")
+    fun getAllAvaloirsNotDraftsList(): List<Avaloir>
+
     @Query("SELECT * FROM avaloir WHERE idReferent = 0")
     fun getAllDraftsFlow(): Flow<List<Avaloir>>
 
@@ -93,4 +96,7 @@ interface AvaloirDao {
 
     @Query("SELECT COUNT(idReferent) FROM dateNettoyage")
     fun countDatesNettoyages(): Int
+
+    @Query("DELETE FROM avaloir WHERE idReferent NOT IN (:ids)")
+    fun deleteAvaloirsNotIn(ids: List<Int>)
 }

@@ -15,6 +15,10 @@ class AvaloirRepository @Inject constructor(
         return avaloirDao.getAll()
     }
 
+    fun getAllAvaloirsNotDraftsList(): List<Avaloir> {
+        return avaloirDao.getAllAvaloirsNotDraftsList()
+    }
+
     fun getAllAvaloirsDraftsList(): List<Avaloir> {
         return avaloirDao.getAllAvaloirsDraftsList()
     }
@@ -99,5 +103,8 @@ class AvaloirRepository @Inject constructor(
         return avaloirDao.countDatesNettoyages()
     }
 
+    fun deleteAvaloirsNotIn(ids: List<Int>) {
+        return avaloirDao.deleteAvaloirsNotIn(ids)
+    }
 
 }

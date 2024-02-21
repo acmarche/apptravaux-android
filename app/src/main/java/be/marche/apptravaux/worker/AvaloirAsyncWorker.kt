@@ -52,6 +52,8 @@ class AvaloirAsyncWorker @AssistedInject constructor(
         sleep(15)
         avaloirs = avaloirService.fetchAllAvaloirs()
         downloadContent()
+        sleep(15)
+        deleteNotInApi()
         outputData.putString(WORK_RESULT, "Synchronisation finie").build()
         return Result.success(outputData.build())
     }
@@ -292,6 +294,33 @@ class AvaloirAsyncWorker @AssistedInject constructor(
             }
         }
         return results
+    }
+
+    private suspend fun deleteNotInApi(): NotificationState {
+        val localAvaloirIds = avaloirRepository.getAllAvaloirsNotDraftsList().map { it.idReferent }
+        val apiIAvaloirIds = avaloirs.map { it.idReferent }
+
+        // delete local avaloirs not in api list
+        val itemsToDelete = localAvaloirIds.filterNot { apiIAvaloirIds.contains(it) }
+
+        try {
+            var errorResult = ""
+            try {
+                avaloirRepository.deleteAvaloirsNotIn(itemsToDelete)
+            } catch (e: Exception) {
+                errorResult = "error delete local avaloirs: ${e.message}"
+                insertError("error delete local Avaloirs", e.message)
+                Firebase.crashlytics.recordException(e)
+                NotificationState.Error("${e.message}")
+                return NotificationState.Error(errorResult)
+            }
+            return NotificationState.Success("oki avaloirs")
+        } catch (e: Exception) {
+            insertError("error delete local Avaloirs", e.message)
+            Firebase.crashlytics.recordException(e)
+            return NotificationState.Error("${e.message}")
+        }
+
     }
 
     private fun treatmentResults(name: String, idNotify: Int, results: List<NotificationState>) {
