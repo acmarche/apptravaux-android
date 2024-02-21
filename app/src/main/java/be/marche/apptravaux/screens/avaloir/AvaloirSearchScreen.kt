@@ -169,7 +169,7 @@ class AvaloirSearchScreen(
         }
 
         LaunchedEffect(true) {
-            avaloirViewModel.search(location.latitude, location.longitude, 250)
+            avaloirViewModel.search(location.latitude, location.longitude, 25)
         }
 
         ResultSearch(avaloirViewModel)
