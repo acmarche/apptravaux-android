@@ -160,15 +160,22 @@ class AvaloirViewModel @Inject constructor(
         _resultSearch.value = SearchResponseUiState.Loading
 
         viewModelScope.launch {
-            val response =
-                avaloirService.searchAvaloir(SearchRequest(latitude, longitude, distance))
-            if (response.isSuccessful) {
-                response.body()?.let { searchResponse ->
-                    _resultSearch.value = SearchResponseUiState.Loaded(searchResponse)
+
+            try {
+                val response =
+                    avaloirService.searchAvaloir(SearchRequest(latitude, longitude, distance))
+                if (response.isSuccessful) {
+                    response.body()?.let { searchResponse ->
+                        _resultSearch.value = SearchResponseUiState.Loaded(searchResponse)
+                    }
+                } else {
+                    _resultSearch.value =
+                        SearchResponseUiState.Error("Erreur survenue: ${response.message()}")
                 }
-            } else {
+            }
+            catch (ex: Exception){
                 _resultSearch.value =
-                    SearchResponseUiState.Error("Erreur survenue: ${response.message()}")
+                        SearchResponseUiState.Error("Erreur survenue: ${ex.message}")
             }
         }
     }
