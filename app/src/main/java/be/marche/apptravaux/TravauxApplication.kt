@@ -21,9 +21,10 @@ class TravauxApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
 
-         //if (BuildConfig.DEBUG) {
-              Timber.plant(Timber.DebugTree())
-         //}
+        //todo comment in prod !
+        //if (BuildConfig.DEBUG) {
+        //Timber.plant(Timber.DebugTree())
+        //}
     }
 
     override val workManagerConfiguration: Configuration

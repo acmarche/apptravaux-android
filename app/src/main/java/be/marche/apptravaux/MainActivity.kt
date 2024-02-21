@@ -40,7 +40,8 @@ class MainActivity : ComponentActivity() {
         NetworkUtils.getNetworkLiveData(applicationContext).observe(this) {
             if (it) {
                 lifecycleScope.launch {
-                  //  syncContent()
+                    // in prod remove comment
+                    syncContent()
                 }
             } else {
                 try {
@@ -85,6 +86,7 @@ class MainActivity : ComponentActivity() {
                     WorkInfo.State.FAILED -> {
                         Firebase.crashlytics.log("Failt auto sync avaloir ${it.state}")
                     }
+
                     else -> {
 
                     }
@@ -106,6 +108,7 @@ class MainActivity : ComponentActivity() {
                     WorkInfo.State.FAILED -> {
                         Firebase.crashlytics.log("Failt auto sync stock ${it.state}")
                     }
+
                     else -> {
 
                     }
