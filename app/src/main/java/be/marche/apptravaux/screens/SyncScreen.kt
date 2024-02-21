@@ -7,8 +7,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +20,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -36,7 +40,6 @@ import be.marche.apptravaux.navigation.TravauxRoutes
 import be.marche.apptravaux.networking.ConnectionState
 import be.marche.apptravaux.networking.connectivityState
 import be.marche.apptravaux.screens.widgets.ConnectivityStatusBox
-import be.marche.apptravaux.screens.widgets.OutlinedButtonJf
 import be.marche.apptravaux.screens.widgets.TopAppBarJf
 import be.marche.apptravaux.ui.theme.LARGEST_PADDING
 import be.marche.apptravaux.ui.theme.MEDIUM_PADDING
@@ -115,9 +118,10 @@ class SyncScreen(
                         color = MaterialTheme.colors.background
                     )
 
-                    OutlinedButtonJf(
-                        "Synchroniser les données", isConnected
-                    ) {
+                    var isEnabled by remember { mutableStateOf(isConnected) }
+
+                    val onItemCLick = {
+                        isEnabled = false
                         workerViewModel.enqueueWorkRequest(
                             requestAvaloir,
                             WorkerViewModel.AVALOIR_SYNC_WORK_REQUEST
@@ -125,6 +129,18 @@ class SyncScreen(
                         workerViewModel.enqueueWorkRequest(
                             requestStock,
                             WorkerViewModel.STOCK_SYNC_WORK_REQUEST
+                        )
+                    }
+
+                    OutlinedButton(
+                        onClick = onItemCLick,
+                        shape = CircleShape,
+                        enabled = isEnabled,
+                        elevation = ButtonDefaults.elevation(8.dp)
+                    ) {
+                        Text(
+                            text = "Synchroniser les données",
+                            modifier = Modifier.padding(6.dp)
                         )
                     }
 
@@ -152,12 +168,12 @@ class SyncScreen(
             modifier = Modifier.height(LARGEST_PADDING),
             color = MaterialTheme.colors.background
         )
-        Text(text = stringResource(R.string.sync_intro2))
+        Text(text = stringResource(R.string.sync_intro3))
         Divider(
             modifier = Modifier.height(MEDIUM_PADDING),
             color = MaterialTheme.colors.background
         )
-        Text(text = stringResource(R.string.sync_intro3))
+        Text(text = stringResource(R.string.sync_intro2))
         Divider(
             modifier = Modifier.height(MEDIUM_PADDING),
             color = MaterialTheme.colors.background
